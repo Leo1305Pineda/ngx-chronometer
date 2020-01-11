@@ -121,9 +121,13 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
       console.error('Outdid maximo range on second', this._chronometer);
     }
     return Array<string>(
-      valid[2] ? '--' : `${time[2]}`,
-      valid[1] ? '--' : `${time[1]}`,
-      valid[0] ? '--' : `${time[0]}`);
+      valid[2] ? '--' : this.formatNumber(time[2]),
+      valid[1] ? '--' : this.formatNumber(time[1]),
+      valid[0] ? '--' : this.formatNumber(time[0]));
+  }
+
+  formatNumber(n: number): string {
+    return `${n > 9 ? n : `0${n}`}`;
   }
 
   onUnChronometer() {
