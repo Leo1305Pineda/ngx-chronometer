@@ -61,9 +61,9 @@ ngOnInit(): void {
         new Chronometer({
             id: 3,
             status: StatusChonometer.start,
-            rangeSecond: [0, 5],
-            rangeMinute: [0, 5],
-            rangeHour: [0, 5]
+            rangeSecond: [0, 20], // default [0, 60]
+            rangeMinute: [0, 40], // default [0, 60]
+            rangeHour: [0, 60] // default [0, 60]
         })
     );
 }
