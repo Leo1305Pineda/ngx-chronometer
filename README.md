@@ -1,6 +1,6 @@
 # Ngx-Chronometer
 
-This directive chronometer.
+Directive chronometer.
 
 ## Installing
 
@@ -26,76 +26,76 @@ export class PageModule {}
 
 ## Usage
 ```typescript
-    chronometer: Chronometer = new Chronometer();
+chronometer: Chronometer = new Chronometer();
 ```
 
 ```html
- <div>Time: <b [chronometer]="chronometer"></b></div>
+<div>Time: <b [chronometer]="chronometer"></b></div>
 ```
 
 or Array
 
 ```typescript
-    chronometers: Array<Chronometer> = Array<Chronometer>();
+chronometers: Array<Chronometer> = Array<Chronometer>();
 ```
 
 ```html
- <div *ngFor="let chronometer of chronometers">
+<div *ngFor="let chronometer of chronometers">
      Time: <b [chronometer]="chronometer"></b>
- </div>
+</div>
 ```
 
 ## Example
 
 ```typescript
-    ngOnInit(): void {
-        this.chronometers = new Array<Chronometer>(
-            new Chronometer({
-                id: 1,
-                status: StatusChonometer.start
-            }),
-            new Chronometer({
-                id: 2,
-                second: 400
-            }),
-            new Chronometer({
-                id: 3,
-                status: StatusChonometer.start,
-                rangeSecond: [0, 5],
-                rangeMinute: [0, 5],
-                rangeHour: [0, 5]
-            })
-        );
-    }
+ngOnInit(): void {
+    this.chronometers = new Array<Chronometer>(
+        new Chronometer({
+            id: 1,
+            status: StatusChonometer.start
+        }),
+        new Chronometer({
+            id: 2,
+            second: 400
+        }),
+        new Chronometer({
+            id: 3,
+            status: StatusChonometer.start,
+            rangeSecond: [0, 5],
+            rangeMinute: [0, 5],
+            rangeHour: [0, 5]
+        })
+    );
+}
 
-    run(chronometer: Chronometer, status: StatusChonometer) {
-        chronometer.status = status;
-        switch (chronometer.status) {
-        case StatusChonometer.pause:
-            chronometer.pause();
-            break;
-        case StatusChonometer.restart:
-            chronometer.restart();
-            break;
-        case StatusChonometer.start:
-            chronometer.start();
-            break;
-        default:
-            break;
-        }
+run(chronometer: Chronometer, status: StatusChonometer) {
+    chronometer.status = status;
+    switch (chronometer.status) {
+    case StatusChonometer.pause:
+        chronometer.pause();
+        break;
+    case StatusChonometer.restart:
+        chronometer.restart();
+        break;
+    case StatusChonometer.start:
+        chronometer.start();
+        break;
+    default:
+        break;
     }
+}
 ```
 
 ```html
-    <div *ngFor="let chronometer of chronometers">
-        Time: <b [chronometer]="chronometer"></b>
-        <ion-button slot="start" (click)="run(chronometer, chronometer.status === 2 ? 1 : 2)">
-            {{ chronometer.status === 2 ? 'Pause' : 'Start' }}
-        </ion-button>
-        <ion-button slot="end" (click)="run(chronometer, 4)">
-            Restart
-        </ion-button>
-    </div>
+<div *ngFor="let chronometer of chronometers">
+    Time: <b [chronometer]="chronometer"></b>
+    <ion-button slot="start" (click)="run(chronometer, chronometer.status === 2 ? 1 : 2)">
+        {{ chronometer.status === 2 ? 'Pause' : 'Start' }}
+    </ion-button>
+    <ion-button slot="end" (click)="run(chronometer, 4)">
+        Restart
+    </ion-button>
+</div>
 ```
 
 ### StatusChonometer
