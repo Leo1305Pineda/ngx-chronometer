@@ -1,6 +1,6 @@
-# IonCollapseHeader
+# Ngx-Chronometer
 
-This directive collapse header in ionic 4 with the scroll content.
+This directive chronometer.
 
 ## Installing
 
@@ -25,10 +25,89 @@ export class PageModule {}
 ```
 
 ## Usage
-
-Then, just define collapse-haeder in the tag ion-content.
+```typescript
+    chronometer: Chronometer = new Chronometer();
+```
 
 ```html
- <ion-header #header></ion-header>
- <ion-content #content collapse-header [scrollEvents]=true [content]="content" [header]="header"></ion-content>
+ <div>Time: <b [chronometer]="chronometer"></b></div>
+```
+
+or Array
+
+```typescript
+    chronometers: Array<Chronometer> = Array<Chronometer>();
+```
+
+```html
+ <div *ngFor="let chronometer of chronometers">
+     Time: <b [chronometer]="chronometer"></b>
+ </div>
+```
+
+## Example
+
+```typescript
+    ngOnInit(): void {
+        this.chronometers = new Array<Chronometer>(
+            new Chronometer({
+                id: 1,
+                status: StatusChonometer.start
+            }),
+            new Chronometer({
+                id: 2,
+                second: 400
+            }),
+            new Chronometer({
+                id: 3,
+                status: StatusChonometer.start,
+                rangeSecond: [0, 5],
+                rangeMinute: [0, 5],
+                rangeHour: [0, 5]
+            })
+        );
+    }
+
+    run(chronometer: Chronometer, status: StatusChonometer) {
+        chronometer.status = status;
+        switch (chronometer.status) {
+        case StatusChonometer.pause:
+            chronometer.pause();
+            break;
+        case StatusChonometer.restart:
+            chronometer.restart();
+            break;
+        case StatusChonometer.start:
+            chronometer.start();
+            break;
+        default:
+            break;
+        }
+    }
+```
+
+```html
+    <div *ngFor="let chronometer of chronometers">
+        Time: <b [chronometer]="chronometer"></b>
+        <ion-button slot="start" (click)="run(chronometer, chronometer.status === 2 ? 1 : 2)">
+            {{ chronometer.status === 2 ? 'Pause' : 'Start' }}
+        </ion-button>
+        <ion-button slot="end" (click)="run(chronometer, 4)">
+            Restart
+        </ion-button>
+    </div>
+```
+
+### StatusChonometer
+
+```typescript
+enum StatusChonometer {
+    desactived = 0,
+    pause = 1,
+    start = 2,
+    finish = 3,
+    restart = 4,
+    stop = 5,
+    refresh = 6
+}
 ```
