@@ -1,8 +1,26 @@
 {
   "name": "ngx-chronometer",
-  "version": "0.0.1",
+  "description": "Directive Chronometer",
+  "version": "0.0.2",
   "peerDependencies": {
     "@angular/common": "^8.2.0",
     "@angular/core": "^8.2.0"
-  }
+  },
+  "author": {
+    "name": "Leonardo Pineda",
+    "email": "leo1305pineda@gmail.com"
+  },
+  "homepage": "https://github.com/Leo1305Pineda/ngx-chronometer.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Leo1305Pineda/ngx-chronometer.git"
+  },
+  "keywords": [
+    "ionic",
+    "ionic 4",
+    "angular",
+    "chronometer",
+    "timer",
+    "time"
+  ]
 }
