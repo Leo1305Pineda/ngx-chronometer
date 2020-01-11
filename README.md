@@ -111,3 +111,15 @@ enum StatusChonometer {
     refresh = 6
 }
 ```
+
+### Input
+```typescript
+format = '00:00:00'; // delimiter char "/, :, -" used const sep = this.format.split('00');
+rangeSecond: Array<number> = new Array<number>(0, 60); // defaul [0, 60]
+rangeMinute: Array<number> = new Array<number>(0, 120); // defaul [0, 60]
+rangeHour: Array<number> = new Array<number>(0, 60); // defaul [0, 60]
+```
+```html
+   <b [chronometer]="chronometer" [format]="format"></b>
+   <b [chronometer]="chronometer" [rangeSecond]="rangeSecond" [rangeMinute]="rangeMinute" [rangeHour]="rangeHour"></b>
+```
