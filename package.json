@@ -6,7 +6,7 @@
     "name": "Leonardo Pineda",
     "email": "leo1305pineda@gmail.com"
   },
-  "homepage": "https://ngx-chronometer.herokuapp.com/",
+  "homepage": "https://github.com/Leo1305Pineda/ngx-chronometer.git",
   "repository": {
     "type": "git",
     "url": "https://github.com/Leo1305Pineda/ngx-chronometer.git"
@@ -14,10 +14,10 @@
   "keywords": [
     "ionic",
     "ionic 4",
-    "ion-header",
-    "ion-content",
-    "colapse",
-    "hide"
+    "angular",
+    "chronometer",
+    "timer",
+    "time"
   ],
   "scripts": {
     "ng": "ng",
