@@ -3,6 +3,7 @@ import { Subject, Subscription } from 'rxjs';
 export class Chronometer {
     id: number;
     second: number;
+    limitSecond: number;
     status: StatusChonometer;
     timeLabel: TimeChonometer;
     maxSecond: number;
@@ -23,6 +24,7 @@ export class Chronometer {
         this.maxSecond = o.maxSecond || 60;
         this.maxMinute = o.maxMinute || 60;
         this.maxHour = o.maxHour || 60;
+        this.limitSecond = o.limitSecond;
     }
 
     start() {

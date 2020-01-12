@@ -3,7 +3,6 @@ import { Chronometer, StatusChonometer } from './ngx-chronometer';
 import { Subscription, interval } from 'rxjs';
 import * as _ from 'lodash';
 
-const INTERVAL = 1000;
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: '[chronometer]',
@@ -17,37 +16,64 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
   // tslint:disable-next-line:variable-name
   _chronometer: Chronometer = new Chronometer();
 
+  /** sequence the time default 1000 = 1 second */
+  @Input() interval = 1000;
+  /** increment 1 unit */
+  @Input() increment = 1;
+  /** limit in second stop sequence the time */
+  @Input() limitSecond: number;
+  /** maximal second to step minute */
   @Input() maxSecond: number;
+  /** maximal minute to step hour */
   @Input() maxMinute: number;
+  /** maximal hour to reset chronometer */
   @Input() maxHour: number;
+  /** object chronometer */
   @Input() set chronometer(chronometer: Chronometer) {
     chronometer = chronometer || new Chronometer();
     chronometer.maxSecond = this.maxSecond || chronometer.maxSecond || 60;
     chronometer.maxMinute = this.maxMinute || chronometer.maxMinute || 60;
     chronometer.maxHour = this.maxHour || chronometer.maxHour || 60;
     chronometer.time = new Array<number>(0, 0, 0);
-    // chronometer = this.validRange(chronometer);
-    // console.log(this._chronometer, chronometer, _.isEqual(this._chronometer, chronometer));
-    console.log(_.clone(this._chronometer), 'A');
-    this._chronometer = this.activated(chronometer);
+    this._chronometer = this.activated(this.currentSecond(chronometer));
   }
+  /** format to use default 00:00:00 custom 00/00/00 or other delimiter */
   @Input() format = '00:00:00';
+  /** activated emit event sequence chronometer default false */
   @Input() chronoEvents = false;
 
   // tslint:disable-next-line:no-output-on-prefix
   @Output() onChronoEvent = new EventEmitter<Chronometer>();
 
-  chronoSub: Subscription;
+  private chronoSub: Subscription;
 
   constructor(public el: ElementRef) { }
 
   ngOnInit(): void {
     this.chronoSub = this._chronometer.onChronometer.subscribe((chronometer: Chronometer) => {
-      // console.log(this._chronometer, chronometer, _.isEqual(this._chronometer, chronometer));
       this.activated(chronometer);
     });
   }
 
+  /**
+   * @description current seconds
+   * @param chronometer object current chronometer
+   * @see {Chronometer}
+   */
+  currentSecond(chronometer: Chronometer): Chronometer {
+    const limitSecond = this.limitSecond || chronometer.limitSecond;
+    if (limitSecond && chronometer.second >= limitSecond) {
+      chronometer.second = limitSecond - 1;
+      chronometer.status = StatusChonometer.pause;
+    }
+    return chronometer;
+  }
+
+  /**
+   * @description activated chronometer
+   * @param chronometer object current chronometer
+   * @see {Chronometer}
+   */
   private activated(chronometer: Chronometer = this._chronometer): Chronometer {
     this._chronometer = this.setTime(chronometer, 0);
     switch (chronometer.status) {
@@ -70,10 +96,20 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
     return this._chronometer;
   }
 
+  /**
+   * @description pause seconds
+   * @param chronometer object current chronometer
+   * @see {Chronometer}
+   */
   private pause(chronometer: Chronometer): Chronometer {
     return this.stop(chronometer);
   }
 
+  /**
+   * @description stop seconds
+   * @param chronometer object current chronometer
+   * @see {Chronometer}
+   */
   private stop(chronometer): Chronometer {
     if (chronometer.intervalSub) {
       chronometer.intervalSub.unsubscribe();
@@ -82,16 +118,25 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
     return chronometer;
   }
 
+  /**
+   * @description start seconds
+   * @param chronometer object current chronometer
+   * @see {Chronometer}
+   */
   private start(chronometer: Chronometer): Chronometer {
     chronometer.status = 2;
     if (!chronometer.intervalSub) {
-      this._chronometer.intervalSub = interval(INTERVAL).subscribe(() => {
-        this._chronometer = this.setTime(chronometer);
+      this._chronometer.intervalSub = interval(this.interval).subscribe(() => {
+        this._chronometer = this.setTime(this.currentSecond(chronometer));
       });
     }
     return chronometer;
   }
 
+  /**
+   * @description inner the text element
+   * @see {Chronometer}
+   */
   get innerText(): string {
     const sep = this.format.split('00');
     switch (sep.length) {
@@ -103,6 +148,10 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description format array time
+   * @see {Chronometer}
+   */
   get timeFormat(): Array<string> {
     const time = this._chronometer.time;
     return Array<string>(
@@ -112,10 +161,18 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * @description return string 2 digit
+   * @param n number to format
+   */
   formatNumber(n: number): string {
     return `${n > 9 ? n : `0${n}`}`;
   }
 
+  /**
+   * @description validator number
+   * @param n number to valid
+   */
   validNumber(n: number) {
     const enc = !_.isNaN(_.isNumber(n)) && n > 0;
     if (!enc) {
@@ -125,15 +182,27 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
     return enc ? n : 60;
   }
 
-  private setTime(chronometer: Chronometer, second = 1): Chronometer {
+  /**
+   * @description
+   * @param chronometer object current chronometer
+   * @see {Chronometer}
+   * @param second increment the time
+   * @see {increment} default [increment]="1"
+   */
+  private setTime(chronometer: Chronometer, second = this.increment): Chronometer {
     if (chronometer.second >= 0) {
       chronometer.second = chronometer.second + second;
-      const diffSS = this.validNumber(this._chronometer.maxSecond);
-      const diffMM = this.validNumber(this._chronometer.maxMinute);
-      const hh = Math.trunc((chronometer.second / this.validNumber(chronometer.maxSecond)) / this.validNumber(this._chronometer.maxMinute));
+      const diffSS = this.validNumber(chronometer.maxSecond);
+      const diffMM = this.validNumber(chronometer.maxMinute);
+      const hh = Math.trunc((chronometer.second / this.validNumber(chronometer.maxSecond)) / this.validNumber(chronometer.maxMinute));
       const mm = Math.trunc(chronometer.second / this.validNumber(chronometer.maxSecond)) - hh * diffMM;
       const ss = chronometer.second - Math.trunc(chronometer.second / diffSS) * diffSS;
-      chronometer.time = new Array(hh, mm, ss);
+      if (hh === chronometer.maxHour) {
+        chronometer.second = 0;
+        chronometer.time = new Array(0, 0, 0);
+      } else {
+        chronometer.time = new Array(hh, mm, ss);
+      }
     }
     if (this.chronoEvents) {
       this.onChronoEvent.emit(chronometer);

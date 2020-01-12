@@ -84,7 +84,8 @@ ngOnInit(): void {
         }),
         new Chronometer({
             id: 2,
-            second: 400
+            second: 400,
+            limitSecond: 1200  // limit second pause the chronimeter
         }),
         new Chronometer({
             id: 3,
