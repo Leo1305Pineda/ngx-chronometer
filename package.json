@@ -1,7 +1,7 @@
 {
   "name": "ngx-chronometer",
   "description": "Directive Chronometer",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "author": {
     "name": "Leonardo Pineda",
     "email": "leo1305pineda@gmail.com"
