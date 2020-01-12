@@ -47,7 +47,8 @@
         <p style="margin-left: 17px;">
           maxHour: {{ c.maxHour | json }},
           maxMinute: {{ c.maxMinute | json }},
-          maxSecond: {{ c.maxSecond | json }}
+          maxSecond: {{ c.maxSecond | json }},
+          {{ c.limitSecond ? 'limitSecond ' + c.limitSecond : '' }}
         </p>
       </div>
     </ion-card-content>

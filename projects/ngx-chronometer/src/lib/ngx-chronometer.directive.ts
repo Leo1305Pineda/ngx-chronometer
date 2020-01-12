@@ -51,7 +51,7 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.chronoSub = this._chronometer.onChronometer.subscribe((chronometer: Chronometer) => {
-      this.activated(chronometer);
+      this._chronometer = this.activated(this.currentSecond(chronometer));
     });
   }
 
@@ -62,9 +62,9 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
    */
   currentSecond(chronometer: Chronometer): Chronometer {
     const limitSecond = this.limitSecond || chronometer.limitSecond;
-    if (limitSecond && chronometer.second >= limitSecond) {
-      chronometer.second = limitSecond - 1;
-      chronometer.status = StatusChonometer.pause;
+    if (limitSecond && chronometer.second > limitSecond) {
+      chronometer.second = limitSecond;
+      chronometer.pause();
     }
     return chronometer;
   }
@@ -75,7 +75,6 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
    * @see {Chronometer}
    */
   private activated(chronometer: Chronometer = this._chronometer): Chronometer {
-    this._chronometer = this.setTime(chronometer, 0);
     switch (chronometer.status) {
       case StatusChonometer.pause:
         this._chronometer = this.pause(chronometer); break;
@@ -93,7 +92,7 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
       default:
         break;
     }
-    return this._chronometer;
+    return this.setTime(chronometer, 0);
   }
 
   /**
@@ -127,7 +126,7 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
     chronometer.status = 2;
     if (!chronometer.intervalSub) {
       this._chronometer.intervalSub = interval(this.interval).subscribe(() => {
-        this._chronometer = this.setTime(this.currentSecond(chronometer));
+        this._chronometer = this.currentSecond(this.setTime(chronometer));
       });
     }
     return chronometer;

@@ -17,8 +17,9 @@ export class HomePage implements OnInit {
     this.chronometers = new Array<Chronometer>(
       new Chronometer({
         id: 1,
+        second: 19,
         status: StatusChonometer.start,
-        limitSecond: 20
+        limitSecond: 40
       }),
       new Chronometer({
         id: 2,
@@ -27,9 +28,9 @@ export class HomePage implements OnInit {
       new Chronometer({
         id: 3,
         status: StatusChonometer.start,
-        maxSecond: 2,
-        maxMinute: 2,
-        maxHour: 2
+        maxSecond: 5,
+        maxMinute: 5,
+        maxHour: 5
       })
     );
   }
