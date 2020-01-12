@@ -8,7 +8,7 @@ import { Chronometer, StatusChonometer } from 'projects/ngx-chronometer/src/publ
 })
 export class HomePage implements OnInit {
 
-  chronometer: Chronometer = new Chronometer({ second: 0 });
+  chronometer: Chronometer = new Chronometer({ second: 400 });
   chronometers: Array<Chronometer> = Array<Chronometer>();
 
   constructor() { }
@@ -26,16 +26,26 @@ export class HomePage implements OnInit {
       new Chronometer({
         id: 3,
         status: StatusChonometer.start,
-        rangeSecond: [0, 5],
-        rangeMinute: [0, 5],
-        rangeHour: [0, 5]
+        maxSecond: 5,
+        maxMinute: 5,
+        maxHour: 5
       })
     );
   }
 
+  onChronoEvent(chronometer: Chronometer) {
+    console.log(chronometer);
+  }
+
+  refresh(c: Chronometer) {
+    c.status = 2;
+    c.second = c.second + 20;
+    c.refresh();
+  }
+
   run(chronometer: Chronometer, status: StatusChonometer) {
     chronometer.status = status;
-    console.log(chronometer.status, 'StatusChonometer');
+    // console.log(chronometer.status, 'StatusChonometer');
     switch (chronometer.status) {
       case StatusChonometer.pause:
         chronometer.pause();

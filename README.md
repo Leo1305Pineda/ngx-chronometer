@@ -45,6 +45,34 @@ chronometers: Array<Chronometer> = Array<Chronometer>();
 </div>
 ```
 
+### Refresh
+
+```typescript
+refresh(chronometer: Chronometer) {
+    chronometer.status = StatusChonometer.start;
+    chronometer.second = chronometer.second + 20;
+    chronometer.refresh();
+}
+```
+
+```html
+<div *ngFor="let chronometer of chronometers">
+     Time: <b [chronometer]="chronometer" (click)="refresh(chronometer)"></b>
+</div>
+```
+
+### Events
+
+```typescript
+onChronoEvent(chronometer: Chronometer) {
+    console.log(chronometer);
+}
+```
+
+```html
+<div>Time: <b [chronometer]="chronometer" [chronoEvents]=true (onChronoEvent)="onChronoEvent($event)"></b></div>
+```
+
 ## Example
 
 ```typescript
@@ -61,9 +89,9 @@ ngOnInit(): void {
         new Chronometer({
             id: 3,
             status: StatusChonometer.start,
-            rangeSecond: [0, 20], // default [0, 60]
-            rangeMinute: [0, 40], // default [0, 60]
-            rangeHour: [0, 60] // default [0, 60]
+            maxSecond: 20, // default 60
+            maxMinute: 40, // default 60
+            maxHour: 60 // default 60
         })
     );
 }
@@ -115,11 +143,11 @@ enum StatusChonometer {
 ### Input
 ```typescript
 format = '00:00:00'; // delimiter char "/, :, -" used const sep = this.format.split('00');
-rangeSecond: Array<number> = new Array<number>(0, 60); // defaul [0, 60]
-rangeMinute: Array<number> = new Array<number>(0, 120); // defaul [0, 60]
-rangeHour: Array<number> = new Array<number>(0, 60); // defaul [0, 60]
+maxSecond = 60; // defaul 60
+maxMinute = 120; // defaul 60
+maxHour = 60; // defaul 60
 ```
 ```html
    <b [chronometer]="chronometer" [format]="format"></b>
-   <b [chronometer]="chronometer" [rangeSecond]="rangeSecond" [rangeMinute]="rangeMinute" [rangeHour]="rangeHour"></b>
+   <b [chronometer]="chronometer" [maxSecond]="maxSecond" [maxMinute]="maxMinute" [maxHour]="maxHour"></b>
 ```

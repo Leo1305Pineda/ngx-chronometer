@@ -21,14 +21,14 @@
             Restart
           </ion-button>
         </ion-buttons>
-        <ion-title>
-          Time: <b [chronometer]="chronometer"></b>
+        <ion-title (click)="refresh(chronometer)">
+          Time: <b [chronometer]="chronometer" [chronoEvents]=true (onChronoEvent)="onChronoEvent($event)"></b>
         </ion-title>
       </ion-item>
       <p style="margin-left: 17px;">
-          rangeHour: {{ chronometer.rangeHour | json }},
-          rangeMinute: {{ chronometer.rangeMinute | json }},
-          rangeSecond: {{ chronometer.rangeSecond | json }}
+          maxHour: {{ chronometer.maxHour | json }},
+          maxMinute: {{ chronometer.maxMinute | json }},
+          maxSecond: {{ chronometer.maxSecond | json }}
         </p>
       <div *ngFor="let c of chronometers">
         <ion-item>
@@ -45,9 +45,9 @@
           </ion-title>
         </ion-item>
         <p style="margin-left: 17px;">
-          rangeHour: {{ c.rangeHour | json }},
-          rangeMinute: {{ c.rangeMinute | json }},
-          rangeSecond: {{ c.rangeSecond | json }}
+          maxHour: {{ c.maxHour | json }},
+          maxMinute: {{ c.maxMinute | json }},
+          maxSecond: {{ c.maxSecond | json }}
         </p>
       </div>
     </ion-card-content>

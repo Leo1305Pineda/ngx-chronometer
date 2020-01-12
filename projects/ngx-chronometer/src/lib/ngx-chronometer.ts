@@ -5,9 +5,9 @@ export class Chronometer {
     second: number;
     status: StatusChonometer;
     timeLabel: TimeChonometer;
-    rangeSecond: Array<number>;
-    rangeMinute: Array<number>;
-    rangeHour: Array<number>;
+    maxSecond: number;
+    maxMinute: number;
+    maxHour: number;
     time: Array<number> = new Array<number>(0, 0, 0);
     onChronometer: Subject<Chronometer> = new Subject<Chronometer>();
     intervalSub: Subscription;
@@ -20,9 +20,9 @@ export class Chronometer {
         this.second = o.second || 0;
         this.status = o.status || StatusChonometer.pause;
         this.timeLabel = o.timeLabel;
-        this.rangeSecond = o.rangeSecond || new Array<number>(0, 60);
-        this.rangeMinute = o.rangeMinute || new Array<number>(0, 60);
-        this.rangeHour = o.rangeHour || new Array<number>(0, 60);
+        this.maxSecond = o.maxSecond || 60;
+        this.maxMinute = o.maxMinute || 60;
+        this.maxHour = o.maxHour || 60;
     }
 
     start() {
@@ -45,9 +45,8 @@ export class Chronometer {
         this.onChronometer.next(this);
     }
 
-    clear() {
-        this.second = 0;
-        this.onChronometer.next(null);
+    refresh() {
+        this.onChronometer.next(this);
     }
 }
 
