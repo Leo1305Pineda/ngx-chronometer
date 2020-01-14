@@ -11,7 +11,7 @@
 
 <ion-content>
   <ion-card class="welcome-card">
-    <ion-card-content>
+    <ion-card-content *ngIf="display">
       <ion-item>
         <ion-buttons>
           <ion-button slot="start" (click)="run(chronometer, chronometer.status === 2 ? 1 : 2)">
@@ -22,7 +22,7 @@
           </ion-button>
         </ion-buttons>
         <ion-title (click)="refresh(chronometer)">
-          Time: <b [chronometer]="chronometer" [chronoEvents]=true (onChronoEvent)="onChronoEvent($event)"></b>
+          Time: <b [chronometer]="chronometer" [chronoEvents]=false (onChronoEvent)="onChronoEvent($event)"></b>
         </ion-title>
       </ion-item>
       <p style="margin-left: 17px;">
@@ -51,6 +51,9 @@
           {{ c.limitSecond ? 'limitSecond ' + c.limitSecond : '' }}
         </p>
       </div>
+      <!--ion-button (click)="unsubcribeAll()">
+        UnsubcribeAll
+      </ion-button-->
     </ion-card-content>
   </ion-card>
 </ion-content>

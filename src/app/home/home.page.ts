@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Chronometer, StatusChonometer } from 'projects/ngx-chronometer/src/public-api';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +11,7 @@ export class HomePage implements OnInit {
 
   chronometer: Chronometer = new Chronometer({ second: 400 });
   chronometers: Array<Chronometer> = Array<Chronometer>();
+  display = true;
 
   constructor() { }
 
@@ -19,11 +21,12 @@ export class HomePage implements OnInit {
         id: 1,
         second: 19,
         status: StatusChonometer.start,
-        limitSecond: 40
+        limitSecond: 25
       }),
       new Chronometer({
         id: 2,
-        second: 400
+        second: 400,
+        status: StatusChonometer.start,
       }),
       new Chronometer({
         id: 3,
@@ -61,6 +64,19 @@ export class HomePage implements OnInit {
       default:
         break;
     }
+  }
+
+  unsubcribeAll() {
+    this.display = false;
+    this.chronometer.onChronometer.unsubscribe();
+    this.chronometers.forEach((chronometer: Chronometer) => {
+      // console.log(_.clone(chronometer.onChronometer));
+      if (chronometer.onChronometer) {
+        chronometer.onChronometer.unsubscribe();
+      }
+      // console.log(_.clone(chronometer.onChronometer));
+    });
+    setTimeout(() => this.display = true, 4000);
   }
 
 }

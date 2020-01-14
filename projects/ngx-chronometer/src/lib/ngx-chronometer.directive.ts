@@ -1,6 +1,6 @@
-import { Directive, ElementRef, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Directive, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Chronometer, StatusChonometer } from './ngx-chronometer';
-import { Subscription, interval } from 'rxjs';
+import { Subscription, interval, Subject } from 'rxjs';
 import * as _ from 'lodash';
 
 @Directive({
@@ -47,9 +47,13 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
 
   private chronoSub: Subscription;
 
-  constructor(public el: ElementRef) { }
+  constructor() { }
 
   ngOnInit(): void {
+    // tslint:disable-next-line:max-line-length
+    if (this._chronometer.onChronometer.observers == null) {
+      this._chronometer.onChronometer = new Subject<Chronometer>();
+    }
     this.chronoSub = this._chronometer.onChronometer.subscribe((chronometer: Chronometer) => {
       this._chronometer = this.activated(this.currentSecond(chronometer));
     });
@@ -65,6 +69,11 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
     if (limitSecond && chronometer.second > limitSecond) {
       chronometer.second = limitSecond;
       chronometer.pause();
+      this._chronometer = chronometer;
+      if (this._chronometer.intervalSub) {
+        this._chronometer.intervalSub.unsubscribe();
+      }
+      this._chronometer.intervalSub = undefined;
     }
     return chronometer;
   }
@@ -125,8 +134,8 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
   private start(chronometer: Chronometer): Chronometer {
     chronometer.status = 2;
     if (!chronometer.intervalSub) {
-      this._chronometer.intervalSub = interval(this.interval).subscribe(() => {
-        this._chronometer = this.currentSecond(this.setTime(chronometer));
+      chronometer.intervalSub = interval(this.interval).subscribe(() => {
+        chronometer = this.currentSecond(this.setTime(chronometer));
       });
     }
     return chronometer;
@@ -213,9 +222,10 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
     if (this.chronoSub) {
       this.chronoSub.unsubscribe();
     }
-    if (this._chronometer.onChronometer) {
-      this._chronometer.onChronometer.unsubscribe();
+    if (this._chronometer.intervalSub) {
+      this._chronometer.intervalSub.unsubscribe();
     }
+    this._chronometer.onChronometer.unsubscribe();
   }
 
 }
