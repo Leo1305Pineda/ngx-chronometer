@@ -28,6 +28,8 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
   @Input() maxMinute: number;
   /** maximal hour to reset chronometer */
   @Input() maxHour: number;
+  /** maximal hour to reset chronometer */
+  @Input() isMinutes: boolean;
   /** object chronometer */
   @Input() set chronometer(chronometer: Chronometer) {
     chronometer = chronometer || new Chronometer();
@@ -146,10 +148,11 @@ export class NgxChronometerDirective implements OnInit, OnDestroy {
    * @see {Chronometer}
    */
   get innerText(): string {
-    const sep = this.format.split('00');
+    const sep = (this.format || '').split('00');
+    const a = this.isMinutes ? 1 : 0;
     switch (sep.length) {
-      case 1: return `${sep[0]}${this.timeFormat[0]}${sep[1]}`;
-      case 2: return `${sep[0]}${this.timeFormat[0]}${sep[1]}`;
+      case 1: return `${sep[0]}${this.timeFormat[a]}${sep[1]}`;
+      case 2: return `${sep[0]}${this.timeFormat[a]}${sep[1]}`;
       case 3: return `${sep[0]}${this.timeFormat[1]}${sep[1]}${this.timeFormat[0]}${sep[2]}`;
       case 4: return `${sep[0]}${this.timeFormat[2]}${sep[1]}${this.timeFormat[1]}${sep[2]}${this.timeFormat[0]}${sep[3]}`;
       default: return `${sep[0]}${this.timeFormat[2]}${sep[1]}${this.timeFormat[1]}${sep[2]}${this.timeFormat[0]}${sep[3]}`;
