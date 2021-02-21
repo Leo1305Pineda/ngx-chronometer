@@ -1,5 +1,19 @@
 import { Subject, Subscription } from 'rxjs';
+export enum TimeChonometer {
+    timemedio = 0,
+    timeone = 1,
+    timetwo = 2
+}
 
+export enum StatusChonometer {
+    desactived = 0,
+    pause = 1,
+    start = 2,
+    finish = 3,
+    restart = 4,
+    stop = 5,
+    refresh = 6
+}
 export class Chronometer {
     id: number;
     second: number;
@@ -50,20 +64,4 @@ export class Chronometer {
     refresh() {
         this.onChronometer.next(this);
     }
-}
-
-export enum TimeChonometer {
-    timemedio = 0,
-    timeone = 1,
-    timetwo = 2
-}
-
-export enum StatusChonometer {
-    desactived = 0,
-    pause = 1,
-    start = 2,
-    finish = 3,
-    restart = 4,
-    stop = 5,
-    refresh = 6
 }
